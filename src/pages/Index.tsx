@@ -7,13 +7,15 @@ import { useToast } from "@/hooks/use-toast";
 import { Tables } from "@/integrations/supabase/types";
 
 type Restaurant = Tables<"restaurants">;
-type Review = Tables<"reviews"> & {
-  profiles: Tables<"profiles">;
+
+// Update the Review type to match the structure of the data we're getting from Supabase
+type ReviewWithProfile = Tables<"reviews"> & {
+  profiles: Pick<Tables<"profiles">, "username" | "avatar_url">;
 };
 
 const Index = () => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [latestReviews, setLatestReviews] = useState<Review[]>([]);
+  const [latestReviews, setLatestReviews] = useState<ReviewWithProfile[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
 
