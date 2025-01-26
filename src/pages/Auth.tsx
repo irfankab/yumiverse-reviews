@@ -33,7 +33,7 @@ const Auth = () => {
         });
         
         if (error) {
-          // Handle specific error cases
+          console.log("Signup error:", error);
           if (error.message.includes("User already registered")) {
             toast({
               title: "Account exists",
@@ -56,16 +56,18 @@ const Auth = () => {
           description: "Please check your email to verify your account.",
         });
       } else {
+        console.log("Attempting login with:", { email });
         const { error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         
         if (error) {
+          console.log("Login error:", error);
           if (error.message.includes("Invalid login credentials")) {
             toast({
               title: "Invalid credentials",
-              description: "Please check your email and password and try again.",
+              description: "The email or password you entered is incorrect. Please try again.",
               variant: "destructive",
             });
           } else {
@@ -78,9 +80,11 @@ const Auth = () => {
           return;
         }
         
+        console.log("Login successful, navigating to home");
         navigate("/");
       }
     } catch (error: any) {
+      console.error("Authentication error:", error);
       toast({
         title: "Error",
         description: error.message,
@@ -130,6 +134,7 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
               />
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
